@@ -37,7 +37,7 @@ functions:
     handler: lambdas/transaction.handler
     events:
       - http:
-          path: /transactions/save
+          path: transactions/save
           method: POST
           cors: true
 
