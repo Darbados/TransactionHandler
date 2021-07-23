@@ -2,14 +2,48 @@ org: darbados
 app: transactions-handler
 service: transactions-handler
 
+projectDir: ./
+
 frameworkVersion: '2'
 
 
 provider:
   name: aws
   runtime: python3.8
+  stage: dev
+  region: eu-west-3
+  stackName: TransactionHandler
+  apiName: TransactionsAPI
+  memorySize: 128
   lambdaHashingVersion: 20201221
 
+plugins:
+  - serverless-s3-sync
+
+custom:
+  s3Sync:
+    - bucketName: transactions-storage-bucket-230721
+      localDir: assets
+
 functions:
-  hello:
-    handler: lambdas/handler.hello
+  index:
+    handler: lambdas/index.handler
+    events:
+      - http:
+          path: /
+          method: GET
+          cors: true
+  saveTransaction:
+    handler: lambdas/transaction.handler
+    events:
+      - http:
+          path: /transactions/save
+          method: POST
+          cors: true
+
+resources:
+  Resources:
+    DemoBucketUpload:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: transactions-storage-bucket-230721
