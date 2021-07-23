@@ -16,6 +16,8 @@ provider:
   apiName: TransactionsAPI
   memorySize: 128
   lambdaHashingVersion: 20201221
+  logs:
+    restApi: true
 
 plugins:
   - serverless-s3-sync
