@@ -18,10 +18,12 @@ provider:
   lambdaHashingVersion: 20201221
   logs:
     restApi: true
+  environment:
+    DB_TABLE_NAME: 'transactions-${self:provider.stage}'
 
 plugins:
   - serverless-s3-sync
-
+  - serverless-python-requirements
 custom:
   s3Sync:
     - bucketName: transactions-storage-bucket-230721
@@ -49,3 +51,16 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: transactions-storage-bucket-230721
+    TransactionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: N
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DB_TABLE_NAME}
