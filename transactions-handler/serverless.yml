@@ -24,6 +24,8 @@ provider:
 plugins:
   - serverless-s3-sync
   - serverless-python-requirements
+  - serverless-offline
+
 custom:
   s3Sync:
     - bucketName: transactions-storage-bucket-230721
